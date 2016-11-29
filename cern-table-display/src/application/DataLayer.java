@@ -76,6 +76,7 @@ public class DataLayer {
         return DataLayer.instance;
     }
 	
+	//setup of systemsManager, systems providers, etc
 	private void stepUpSystemsControl()
 	{
 		systemsManager = new SystemsManagerImpl();

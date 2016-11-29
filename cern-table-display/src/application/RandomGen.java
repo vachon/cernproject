@@ -23,7 +23,7 @@ import cern.mpe.systems.domain.mps.key.SafeMachineParameterKey;
 import cern.mpe.systems.domain.mps.key.SisComponentKey;
 import cern.mpe.systems.domain.mps.key.WarmMagnetInterlockKey;
 
-
+//Random systemsProvider
 public class RandomGen implements SystemsProvider {
 
     public Collection<SystemUnderTest> getAllSystems() {
