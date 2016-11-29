@@ -1,10 +1,15 @@
 package application;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
 import cern.mpe.systems.core.domain.SystemUnderTest;
+import cern.mpe.systems.core.service.control.SystemsControllerImpl;
+import cern.mpe.systems.core.service.manage.SystemAttributesManagerImpl;
+import cern.mpe.systems.core.service.manage.SystemsManagerImpl;
+import cern.mpe.systems.core.service.provider.SystemsProvider;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -18,12 +23,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import mpe.commons.util.checks.Checks;
 
 
 public class DataLayer {
 	
 	private static DataLayer instance;
 	private Collection<SystemUnderTest> listUnderTest;
+	private SystemsManagerImpl systemsManager;
+	private Collection<SystemsProvider> systemProviders;
 	private Scene scene;
 	private boolean isFirstLaunch;
 	
@@ -68,10 +76,34 @@ public class DataLayer {
         return DataLayer.instance;
     }
 	
+	private void stepUpSystemsControl()
+	{
+		systemsManager = new SystemsManagerImpl();
+		systemProviders = new ArrayList<SystemsProvider>();
+		
+		RandomGen test = new RandomGen();
+		RandomGen test2 = new RandomGen();
+		
+		systemProviders.add(test);
+		systemProviders.add(test2);
+
+		Checks.notNull(systemProviders, "systemProviders");
+        Checks.notNull(systemsManager, "systemsManager");
+        
+		systemsManager.setSystemsProviders(systemProviders);
+        SystemAttributesManagerImpl systemAttributesManager = new SystemAttributesManagerImpl();
+        SystemsControllerImpl systemsController = new SystemsControllerImpl();
+        systemsController.setSystemsManager(systemsManager);
+        systemsController.setSystemAttributesManager(systemAttributesManager);
+	}
+	
 	public ObservableList<TableItem> getData() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
 	{
-		listUnderTest = RandomGen.getAllSystems();
-		
+		if(isFirstLaunch)
+			stepUpSystemsControl();
+        systemsManager.init();
+        
+        listUnderTest = systemsManager.getAllSystemsUnderTest();
 		this.filterName();
 		this.filterType();
 		this.filterRelation();
@@ -110,11 +142,11 @@ public class DataLayer {
 	private void filterType()
 	{
 		Collection<SystemUnderTest> list = new HashSet<>();
-		ComboBox<String> cbType = (ComboBox<String>) scene.lookup("#cbType");
+		ComboBox cbType = (ComboBox) scene.lookup("#cbType");
 		if(isFirstLaunch)
 		{
 			cbType.getItems().add("-");
-			cbType.getItems().addAll(ClassFinder.findToString("cern.mpe.systems.domain.mps"));
+			cbType.getItems().addAll(systemsManager.getAllSystemTypes());
 			cbType.getSelectionModel().selectFirst();
 		}
 		
@@ -122,7 +154,7 @@ public class DataLayer {
 		for(SystemUnderTest item : listUnderTest)
 		{
 			String itemstr = item.getClass().getSimpleName();
-			String cbstr = cbType.getValue();
+			String cbstr = cbType.getValue().toString();
 			if(itemstr.equals(cbstr) || cbstr.equals("-"))
 			{
 				System.out.println("ok");

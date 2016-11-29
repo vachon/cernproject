@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Random;
 
 import cern.mpe.systems.core.domain.SystemUnderTest;
+import cern.mpe.systems.core.service.provider.SystemsProvider;
 import cern.mpe.systems.domain.mps.BeamInterlock;
 import cern.mpe.systems.domain.mps.BeamLossMonitorCrate;
 import cern.mpe.systems.domain.mps.FastMagnetCurrentChangeMonitor;
@@ -23,13 +24,13 @@ import cern.mpe.systems.domain.mps.key.SisComponentKey;
 import cern.mpe.systems.domain.mps.key.WarmMagnetInterlockKey;
 
 
-public class RandomGen {
+public class RandomGen implements SystemsProvider {
 
-    public static Collection<SystemUnderTest> getAllSystems() {
+    public Collection<SystemUnderTest> getAllSystems() {
 
             Random random = new Random();
             HashSet<SystemUnderTest> systemsUnderTest = new HashSet<>();
-            for (int i=0; i<500; i++) {
+            for (int i=0; i<5; i++) {
                     int choice = random.nextInt(8);
                     switch (choice) {
                     case 0 :
@@ -68,8 +69,7 @@ public class RandomGen {
 
             }
             return systemsUnderTest;
-            
- 
 
     }
+    
 }
