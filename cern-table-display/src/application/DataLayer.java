@@ -95,13 +95,13 @@ public class DataLayer {
         SystemsControllerImpl systemsController = new SystemsControllerImpl();
         systemsController.setSystemsManager(systemsManager);
         systemsController.setSystemAttributesManager(systemAttributesManager);
+        systemsManager.init();
 	}
 	
 	public ObservableList<TableItem> getData() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
 	{
 		if(isFirstLaunch)
 			stepUpSystemsControl();
-        systemsManager.init();
         
         listUnderTest = systemsManager.getAllSystemsUnderTest();
 		this.filterName();
