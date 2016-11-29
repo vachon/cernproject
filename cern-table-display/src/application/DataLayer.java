@@ -1,4 +1,5 @@
 package application;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -18,12 +19,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-//mon premier commit
+
 public class DataLayer {
 	
 	private static DataLayer instance;
 	private Collection<SystemUnderTest> listUnderTest;
 	private Scene scene;
+	private boolean isFirstLaunch;
 	
 	public Collection<SystemUnderTest> getListUnderTest() {
 		return listUnderTest;
@@ -32,7 +34,7 @@ public class DataLayer {
 	public Scene getScene() {
 		return scene;
 	}
-
+	
 	public void setListUnderTest(Collection<SystemUnderTest> listUnderTest) {
 		this.listUnderTest = listUnderTest;
 	}
@@ -41,6 +43,14 @@ public class DataLayer {
 		this.scene = scene;
 	}
 	
+	public boolean isFirstLaunch() {
+		return isFirstLaunch;
+	}
+
+	public void setFirstLaunch(boolean isFirstLaunch) {
+		this.isFirstLaunch = isFirstLaunch;
+	}
+
 	private DataLayer() {
 		super();
 	}
@@ -51,6 +61,7 @@ public class DataLayer {
            synchronized(DataLayer.class) {
              if (DataLayer.instance == null) {
                DataLayer.instance = new DataLayer();
+               DataLayer.getInstance().isFirstLaunch = true;
              }
            }
         }
@@ -65,6 +76,7 @@ public class DataLayer {
 		this.filterType();
 		this.filterRelation();
 		
+		this.isFirstLaunch = false;
 		return convertToObservableList();
 	}
 	
@@ -99,9 +111,14 @@ public class DataLayer {
 	{
 		Collection<SystemUnderTest> list = new HashSet<>();
 		ComboBox<String> cbType = (ComboBox<String>) scene.lookup("#cbType");
-		cbType.getItems().add("-");
-		cbType.getItems().addAll(ClassFinder.findToString("cern.mpe.systems.domain.mps"));
-		cbType.getSelectionModel().selectFirst();
+		if(isFirstLaunch)
+		{
+			cbType.getItems().add("-");
+			cbType.getItems().addAll(ClassFinder.findToString("cern.mpe.systems.domain.mps"));
+			cbType.getSelectionModel().selectFirst();
+		}
+		
+		
 		for(SystemUnderTest item : listUnderTest)
 		{
 			String itemstr = item.getClass().getSimpleName();
