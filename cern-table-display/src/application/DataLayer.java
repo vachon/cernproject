@@ -32,9 +32,19 @@ public class DataLayer {
 	private Collection<SystemUnderTest> listUnderTest;
 	private SystemsManagerImpl systemsManager;
 	private Collection<SystemsProvider> systemProviders;
+	private RandomGenRelations randRelation;
 	private Scene scene;
 	private boolean isFirstLaunch;
 	
+	
+	public RandomGenRelations getRandRelation() {
+		return randRelation;
+	}
+
+	public void setRandRelation(RandomGenRelations randRelation) {
+		this.randRelation = randRelation;
+	}
+
 	public Collection<SystemUnderTest> getListUnderTest() {
 		return listUnderTest;
 	}
@@ -81,12 +91,12 @@ public class DataLayer {
 	{
 		systemsManager = new SystemsManagerImpl();
 		systemProviders = new ArrayList<SystemsProvider>();
+		randRelation = new RandomGenRelations();
+		RandomGenSystems test = new RandomGenSystems();
 		
-		RandomGen test = new RandomGen();
-		RandomGen test2 = new RandomGen();
+		//randRelation.genAllRelations(systemsManager);
 		
 		systemProviders.add(test);
-		systemProviders.add(test2);
 
 		Checks.notNull(systemProviders, "systemProviders");
         Checks.notNull(systemsManager, "systemsManager");
@@ -97,6 +107,7 @@ public class DataLayer {
         systemsController.setSystemsManager(systemsManager);
         systemsController.setSystemAttributesManager(systemAttributesManager);
         systemsManager.init();
+        //System.out.println(randRelation.getAllSystemRelations(systemsManager));
 	}
 	
 	public ObservableList<TableItem> getData() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
@@ -119,7 +130,7 @@ public class DataLayer {
 		ObservableList<TableItem> data = FXCollections.observableArrayList();
 		for(SystemUnderTest item : listUnderTest)
 		{
-			String props[] = {item.getName(),item.getKey().toString(),item.getSystemAttributes().toString(),"test","test2"};
+			String props[] = {item.getName(),item.getKey().toDbString(),item.getSystemAttributes().toString(),"test","test2"};
 			data.add(new TableItem(props));
 		}
 		return data;
@@ -158,7 +169,6 @@ public class DataLayer {
 			String cbstr = cbType.getValue().toString();
 			if(itemstr.equals(cbstr) || cbstr.equals("-"))
 			{
-				System.out.println("ok");
 				list.add(item);
 			}
 		}

@@ -30,7 +30,7 @@ public class Main extends Application {
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
-			RandomGen test = new RandomGen();
+			RandomGenSystems test = new RandomGenSystems();
 			TableView tab = (TableView)scene.lookup("#tab");
 			
 			TableController controller = new TableController(tab);
