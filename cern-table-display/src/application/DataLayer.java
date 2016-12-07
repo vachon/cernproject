@@ -25,7 +25,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import mpe.commons.util.checks.Checks;
 
-
 public class DataLayer {
 	
 	private static DataLayer instance;
@@ -94,8 +93,6 @@ public class DataLayer {
 		randRelation = new RandomGenRelations();
 		RandomGenSystems test = new RandomGenSystems();
 		
-		//randRelation.genAllRelations(systemsManager);
-		
 		systemProviders.add(test);
 
 		Checks.notNull(systemProviders, "systemProviders");
@@ -106,10 +103,13 @@ public class DataLayer {
         SystemsControllerImpl systemsController = new SystemsControllerImpl();
         systemsController.setSystemsManager(systemsManager);
         systemsController.setSystemAttributesManager(systemAttributesManager);
+        
         systemsManager.init();
-        //System.out.println(randRelation.getAllSystemRelations(systemsManager));
 	}
 	
+	
+	//return systems to an observable list
+	//There are call filter function and setUpFunctions
 	public ObservableList<TableItem> getData() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
 	{
 		if(isFirstLaunch)
@@ -118,7 +118,6 @@ public class DataLayer {
         listUnderTest = systemsManager.getAllSystemsUnderTest();
 		this.filterName();
 		this.filterType();
-		this.filterRelation();
 		
 		this.isFirstLaunch = false;
 		return convertToObservableList();
@@ -128,14 +127,18 @@ public class DataLayer {
 	private ObservableList<TableItem> convertToObservableList() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
 	{
 		ObservableList<TableItem> data = FXCollections.observableArrayList();
+		
+		int index = 0;
 		for(SystemUnderTest item : listUnderTest)
 		{
-			String props[] = {item.getName(),item.getKey().toDbString(),item.getSystemAttributes().toString(),"test","test2"};
+			String props[] = {Integer.toString(index),item.getName(),item.getKey().toDbString(),item.getSystemAttributes().toString()};
+			index++;
 			data.add(new TableItem(props));
 		}
 		return data;
 	}
 	
+	//Filter by name
 	private void filterName()
 	{
 		Collection<SystemUnderTest> list = new HashSet<>();
@@ -151,6 +154,7 @@ public class DataLayer {
 		listUnderTest = list;
 	}
 	
+	//Filter by type of system
 	private void filterType()
 	{
 		Collection<SystemUnderTest> list = new HashSet<>();
@@ -175,9 +179,4 @@ public class DataLayer {
 		listUnderTest = list;
 	}
 	
-	private void filterRelation()
-	{
-		
-	}
-
 }

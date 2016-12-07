@@ -1,38 +1,16 @@
 package application;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 import cern.mpe.systems.core.domain.SystemUnderTest;
-import cern.mpe.systems.core.domain.relation.PowercycleSystemRelation;
 import cern.mpe.systems.core.domain.relation.SystemRelation;
 import cern.mpe.systems.core.domain.relation.SystemRelations;
-import cern.mpe.systems.core.domain.relation.UnspecifiedSystemRelation;
 import cern.mpe.systems.core.service.manage.SystemsManager;
 import cern.mpe.systems.core.service.manage.SystemsManagerImpl;
 import cern.mpe.systems.core.service.provider.SystemRelationProvider;
-import cern.mpe.systems.domain.mps.BeamInterlock;
-import cern.mpe.systems.domain.mps.BeamLossMonitorCrate;
-import cern.mpe.systems.domain.mps.FastMagnetCurrentChangeMonitor;
-import cern.mpe.systems.domain.mps.PoweringInterlock;
-import cern.mpe.systems.domain.mps.SafeMachineParameter;
-import cern.mpe.systems.domain.mps.SisServer;
-import cern.mpe.systems.domain.mps.SisSubtree;
-import cern.mpe.systems.domain.mps.WarmMagnetInterlock;
-import cern.mpe.systems.domain.mps.key.BeamInterlockKey;
-import cern.mpe.systems.domain.mps.key.BeamLossMonitorCrateKey;
-import cern.mpe.systems.domain.mps.key.FastMagnetCurrentChangeMonitorKey;
-import cern.mpe.systems.domain.mps.key.PoweringInterlockKey;
-import cern.mpe.systems.domain.mps.key.SafeMachineParameterKey;
-import cern.mpe.systems.domain.mps.key.SisComponentKey;
-import cern.mpe.systems.domain.mps.key.WarmMagnetInterlockKey;
-import mpe.systems.sample.providers.systems.BeamInterlockSampleProvider;
-import mpe.systems.sample.providers.systems.PoweringInterlockSampleProvider;
-import mpe.systems.sample.providers.systems.WarmMagnetInterlockSampleProvider;
 
 public class RandomGenRelations implements SystemRelationProvider{
 	
