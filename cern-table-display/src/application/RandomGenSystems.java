@@ -30,7 +30,7 @@ public class RandomGenSystems implements SystemsProvider {
 
             Random random = new Random();
             HashSet<SystemUnderTest> systemsUnderTest = new HashSet<>();
-            for (int i=0; i<100; i++) {
+            for (int i=0; i<30; i++) {
                     int choice = random.nextInt(8);
                     switch (choice) {
                     case 0 :

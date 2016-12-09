@@ -14,24 +14,26 @@ import cern.mpe.systems.core.service.provider.SystemRelationProvider;
 
 public class RandomGenRelations implements SystemRelationProvider{
 	
-	private Collection<SystemRelation> relations;
+	public Collection<SystemRelation> relations;
 	
-	public void genAllRelations(SystemsManagerImpl systemManager) {
+	public Collection<SystemRelation> genAllRelations(SystemsManagerImpl systemManager) {
 
         Random random = new Random();
         Collection<SystemRelation> relations = new HashSet<>();
         Collection<SystemUnderTest> systems = systemManager.getAllSystemsUnderTest();
-        for (int i=0; i<10; i++) {
+        for (int i=0; i<20; i++) {
         	int id1 = 0;
         	int id2 = 0;
         	id1 = random.nextInt(systemManager.getAllSystemsUnderTest().size());
-        	while (id1==id2)
+        	id2 = random.nextInt(systemManager.getAllSystemsUnderTest().size());
+        	while(id2 == id1)
         		id2 = random.nextInt(systemManager.getAllSystemsUnderTest().size());
         	
-                        relations.add(SystemRelations.unspecifiedFromTo((SystemUnderTest)systems.toArray()[id1],
-                        		(SystemUnderTest)systems.toArray()[id2]));
+        	SystemRelation newRel = SystemRelations.unspecifiedFromTo((SystemUnderTest)systems.toArray()[id1],(SystemUnderTest)systems.toArray()[id2]);
+        	relations.add((SystemRelation)newRel);
         }
-}
+        return relations;
+    }
 		
 	    @Override
 	    public Collection<SystemRelation> getAllSystemRelations(SystemsManager systemsManager) {

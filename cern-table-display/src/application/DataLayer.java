@@ -5,7 +5,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import cern.mpe.systems.core.domain.SystemInformation;
 import cern.mpe.systems.core.domain.SystemUnderTest;
+import cern.mpe.systems.core.domain.relation.SystemRelation;
+import cern.mpe.systems.core.domain.relation.SystemRelations;
 import cern.mpe.systems.core.service.control.SystemsControllerImpl;
 import cern.mpe.systems.core.service.manage.SystemAttributesManagerImpl;
 import cern.mpe.systems.core.service.manage.SystemsManagerImpl;
@@ -34,8 +37,16 @@ public class DataLayer {
 	private RandomGenRelations randRelation;
 	private Scene scene;
 	private boolean isFirstLaunch;
+	private Collection<SystemRelation> rel;
 	
-	
+	public Collection<SystemRelation> getRel() {
+		return rel;
+	}
+
+	public void setRel(Collection<SystemRelation> rel) {
+		this.rel = rel;
+	}
+
 	public RandomGenRelations getRandRelation() {
 		return randRelation;
 	}
@@ -114,8 +125,11 @@ public class DataLayer {
 	{
 		if(isFirstLaunch)
 			stepUpSystemsControl();
-        
         listUnderTest = systemsManager.getAllSystemsUnderTest();
+        
+        randRelation = new RandomGenRelations();
+        rel = new HashSet<>();
+        rel = randRelation.genAllRelations(systemsManager);
 		this.filterName();
 		this.filterType();
 		
@@ -131,7 +145,16 @@ public class DataLayer {
 		int index = 0;
 		for(SystemUnderTest item : listUnderTest)
 		{
-			String props[] = {Integer.toString(index),item.getName(),item.getKey().toDbString(),item.getSystemAttributes().toString()};
+			String source = "";
+			String target = "";
+			for(SystemRelation relation : rel)
+			{
+				if(item.equals(relation.getTarget()))
+					source += relation.getSource().getName() + ", ";
+				if(item.equals(relation.getSource()))
+					target += relation.getTarget().getName() + ", ";
+			}
+			String props[] = {Integer.toString(index),item.getName(),item.getKey().toDbString(),source,target};
 			index++;
 			data.add(new TableItem(props));
 		}
