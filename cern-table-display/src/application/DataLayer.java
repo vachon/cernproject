@@ -1,5 +1,6 @@
 package application;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -15,6 +16,7 @@ import cern.mpe.systems.core.service.provider.SystemsProvider;
 import filters.Filter;
 import filters.FilterInterface;
 import filters.FilterName;
+import filters.FilterTest;
 import filters.FilterType;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
@@ -29,6 +31,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import json.JSONWriter;
 import mpe.commons.util.checks.Checks;
 
 public class DataLayer {
@@ -127,6 +130,7 @@ public class DataLayer {
 		filters = new HashSet<>();
 		filters.add(new FilterName());
 		filters.add(new FilterType());
+		filters.add(new FilterTest());
 		for(Filter filter : filters){
 			filter.callInitialize();
 		}
@@ -135,7 +139,7 @@ public class DataLayer {
 	
 	//return systems to an observable list
 	//There are call filter function and setUpFunctions
-	public ObservableList<TableItem> getData() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
+	public ObservableList<TableItem> getData() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException, IOException
 	{
 		if(isFirstLaunch){
 			setUpSystemsControl();
@@ -146,7 +150,7 @@ public class DataLayer {
         randRelation = new RandomGenRelations();
         rel = new HashSet<>();
         rel = randRelation.genAllRelations(systemsManager);
-     
+        JSONWriter.genJSON(rel);
 		for(Filter filter : filters){
 			listUnderTest = ((FilterInterface)filter).filter(listUnderTest);
 		} 

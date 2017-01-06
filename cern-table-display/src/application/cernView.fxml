@@ -39,14 +39,15 @@
                               </Button>
                            </children>
                         </AnchorPane>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="463.0" prefWidth="375.0">
+                      <AnchorPane id="customFilterAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="463.0" prefWidth="375.0">
                            <children>
                               <Text layoutX="83.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Advanced Filters" wrappingWidth="185.3517837524414">
                                  <font>
                                     <Font size="23.0" />
                                  </font>
                               </Text>
-                           </children></AnchorPane>
+                           </children>
+                      </AnchorPane>
                     </items>
                   </SplitPane>
                </children>

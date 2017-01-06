@@ -1,5 +1,6 @@
 package application;
 	
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -37,7 +38,6 @@ public class Main extends Application {
 			TableController controller = new TableController(tab);
 			controller.initialize(DataLayer.getInstance().getData());
 			
-			
 			Button btnLaunchFilters = (Button)scene.lookup("#btnLaunchFilters");
 			btnLaunchFilters.setOnAction(new EventHandler<ActionEvent>(){
 				public void handle(ActionEvent event) {
@@ -46,6 +46,9 @@ public class Main extends Application {
 						tab.setItems(DataLayer.getInstance().getData());
 					} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException
 							| SecurityException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}

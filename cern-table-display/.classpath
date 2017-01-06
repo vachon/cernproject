@@ -7,5 +7,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/mpe-systems-core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mpe-systems-domain-mps"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mpe-systems-sample"/>
+	<classpathentry kind="lib" path="E:/JavaJson/json-simple-1.1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
