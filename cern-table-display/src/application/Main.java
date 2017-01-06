@@ -3,8 +3,8 @@ package application;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import cern.mpe.systems.core.domain.SystemUnderTest;
+import filters.FilterName;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -22,11 +22,12 @@ import javafx.stage.Stage;
 
 
 public class Main extends Application {
+	public static Scene scene;
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 			StackPane page = (StackPane) FXMLLoader.load(Main.class.getResource("cernView.fxml"));
-			Scene scene = new Scene(page);
+			scene = new Scene(page);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -34,9 +35,8 @@ public class Main extends Application {
 			TableView tab = (TableView)scene.lookup("#tab");
 			
 			TableController controller = new TableController(tab);
-			
-			DataLayer.getInstance().setScene(scene);
 			controller.initialize(DataLayer.getInstance().getData());
+			
 			
 			Button btnLaunchFilters = (Button)scene.lookup("#btnLaunchFilters");
 			btnLaunchFilters.setOnAction(new EventHandler<ActionEvent>(){

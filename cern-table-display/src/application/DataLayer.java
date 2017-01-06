@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-
 import cern.mpe.systems.core.domain.SystemInformation;
 import cern.mpe.systems.core.domain.SystemUnderTest;
 import cern.mpe.systems.core.domain.relation.SystemRelation;
@@ -13,6 +12,10 @@ import cern.mpe.systems.core.service.control.SystemsControllerImpl;
 import cern.mpe.systems.core.service.manage.SystemAttributesManagerImpl;
 import cern.mpe.systems.core.service.manage.SystemsManagerImpl;
 import cern.mpe.systems.core.service.provider.SystemsProvider;
+import filters.Filter;
+import filters.FilterInterface;
+import filters.FilterName;
+import filters.FilterType;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -31,14 +34,32 @@ import mpe.commons.util.checks.Checks;
 public class DataLayer {
 	
 	private static DataLayer instance;
-	private Collection<SystemUnderTest> listUnderTest;
 	private SystemsManagerImpl systemsManager;
 	private Collection<SystemsProvider> systemProviders;
 	private RandomGenRelations randRelation;
-	private Scene scene;
+	//private Scene scene;
 	private boolean isFirstLaunch;
 	private Collection<SystemRelation> rel;
+	private Collection<Filter> filters;
 	
+	
+	
+	public SystemsManagerImpl getSystemsManager() {
+		return systemsManager;
+	}
+
+	public Collection<SystemsProvider> getSystemProviders() {
+		return systemProviders;
+	}
+
+	public void setSystemsManager(SystemsManagerImpl systemsManager) {
+		this.systemsManager = systemsManager;
+	}
+
+	public void setSystemProviders(Collection<SystemsProvider> systemProviders) {
+		this.systemProviders = systemProviders;
+	}
+
 	public Collection<SystemRelation> getRel() {
 		return rel;
 	}
@@ -53,22 +74,6 @@ public class DataLayer {
 
 	public void setRandRelation(RandomGenRelations randRelation) {
 		this.randRelation = randRelation;
-	}
-
-	public Collection<SystemUnderTest> getListUnderTest() {
-		return listUnderTest;
-	}
-
-	public Scene getScene() {
-		return scene;
-	}
-	
-	public void setListUnderTest(Collection<SystemUnderTest> listUnderTest) {
-		this.listUnderTest = listUnderTest;
-	}
-
-	public void setScene(Scene scene) {
-		this.scene = scene;
 	}
 	
 	public boolean isFirstLaunch() {
@@ -97,7 +102,7 @@ public class DataLayer {
     }
 	
 	//setup of systemsManager, systems providers, etc
-	private void stepUpSystemsControl()
+	private void setUpSystemsControl()
 	{
 		systemsManager = new SystemsManagerImpl();
 		systemProviders = new ArrayList<SystemsProvider>();
@@ -118,27 +123,40 @@ public class DataLayer {
         systemsManager.init();
 	}
 	
+	public void setUpFilters(){
+		filters = new HashSet<>();
+		filters.add(new FilterName());
+		filters.add(new FilterType());
+		for(Filter filter : filters){
+			filter.callInitialize();
+		}
+	}
+
 	
 	//return systems to an observable list
 	//There are call filter function and setUpFunctions
 	public ObservableList<TableItem> getData() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
 	{
-		if(isFirstLaunch)
-			stepUpSystemsControl();
-        listUnderTest = systemsManager.getAllSystemsUnderTest();
+		if(isFirstLaunch){
+			setUpSystemsControl();
+			setUpFilters();
+		}
+		Collection<SystemUnderTest> listUnderTest = systemsManager.getAllSystemsUnderTest();
         
         randRelation = new RandomGenRelations();
         rel = new HashSet<>();
         rel = randRelation.genAllRelations(systemsManager);
-		this.filterName();
-		this.filterType();
+     
+		for(Filter filter : filters){
+			listUnderTest = ((FilterInterface)filter).filter(listUnderTest);
+		} 
 		
 		this.isFirstLaunch = false;
-		return convertToObservableList();
+		return convertToObservableList(listUnderTest);
 	}
 	
 	//edit table "props" to change displayed items
-	private ObservableList<TableItem> convertToObservableList() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
+	private ObservableList<TableItem> convertToObservableList(Collection<SystemUnderTest> listUnderTest) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
 	{
 		ObservableList<TableItem> data = FXCollections.observableArrayList();
 		
@@ -160,46 +178,5 @@ public class DataLayer {
 		}
 		return data;
 	}
-	
-	//Filter by name
-	private void filterName()
-	{
-		Collection<SystemUnderTest> list = new HashSet<>();
-		
-		TextField tfDevice = (TextField) scene.lookup("#filterName");
-		String valSearch = tfDevice.getText().toLowerCase();
-		for(SystemUnderTest item : listUnderTest)
-		{
-			String oneItem = item.getName().toLowerCase();
-			if(oneItem.indexOf(valSearch) != -1)
-				list.add(item);
-		}
-		listUnderTest = list;
-	}
-	
-	//Filter by type of system
-	private void filterType()
-	{
-		Collection<SystemUnderTest> list = new HashSet<>();
-		ComboBox cbType = (ComboBox) scene.lookup("#cbType");
-		if(isFirstLaunch)
-		{
-			cbType.getItems().add("-");
-			cbType.getItems().addAll(systemsManager.getAllSystemTypes());
-			cbType.getSelectionModel().selectFirst();
-		}
-		
-		
-		for(SystemUnderTest item : listUnderTest)
-		{
-			String itemstr = item.getClass().getSimpleName();
-			String cbstr = cbType.getValue().toString();
-			if(itemstr.equals(cbstr) || cbstr.equals("-"))
-			{
-				list.add(item);
-			}
-		}
-		listUnderTest = list;
-	}
-	
+
 }
