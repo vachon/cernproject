@@ -26,7 +26,7 @@ public class JSONWriter {
 		
  
 		// try-with-resources statement based on post comment below :)
-		try (FileWriter file = new FileWriter("C:/Users/user/Desktop/jsonpgm.json")) {
+		try (FileWriter file = new FileWriter("C:/Users/user/Desktop/json.json")) {
 			file.write(jSon.toJSONString());
 			System.out.println("Successfully Copied JSON Object to File...");
 			System.out.println("\nJSON Object: " + jSon);

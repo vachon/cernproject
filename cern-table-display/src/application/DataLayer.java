@@ -151,6 +151,7 @@ public class DataLayer {
         rel = new HashSet<>();
         rel = randRelation.genAllRelations(systemsManager);
         JSONWriter.genJSON(rel);
+        System.out.println(rel.size());
 		for(Filter filter : filters){
 			listUnderTest = ((FilterInterface)filter).filter(listUnderTest);
 		} 
