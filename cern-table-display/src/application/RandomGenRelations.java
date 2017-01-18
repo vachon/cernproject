@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-
 import cern.mpe.systems.core.domain.SystemUnderTest;
 import cern.mpe.systems.core.domain.relation.SystemRelation;
 import cern.mpe.systems.core.domain.relation.SystemRelations;
@@ -16,10 +15,9 @@ public class RandomGenRelations implements SystemRelationProvider{
 	
 	public Collection<SystemRelation> relations;
 	
-	public Collection<SystemRelation> genAllRelations(SystemsManagerImpl systemManager) {
-
+	public void genAllRelations(SystemsManagerImpl systemManager) {
         Random random = new Random();
-        Collection<SystemRelation> relations = new HashSet<>();
+        relations = new HashSet<>();
         Collection<SystemUnderTest> systems = systemManager.getAllSystemsUnderTest();
         for (int i=0; i<50; i++) {
         	int id1 = 0;
@@ -32,28 +30,27 @@ public class RandomGenRelations implements SystemRelationProvider{
         	SystemRelation newRel = SystemRelations.unspecifiedFromTo((SystemUnderTest)systems.toArray()[id1],(SystemUnderTest)systems.toArray()[id2]);
         	relations.add((SystemRelation)newRel);
         }
-        return relations;
     }
 		
-	    @Override
-	    public Collection<SystemRelation> getAllSystemRelations(SystemsManager systemsManager) {
-	        Set<SystemRelation> relationsToReturn = new HashSet<>();
-	        for (SystemUnderTest systemUnderTest : systemsManager.getAllSystemsUnderTest()) {
-	            SystemRelation relation = findRelation(systemUnderTest);
-	            if (relation != null && !relationsToReturn.contains(relation)) {
-	                relationsToReturn.add(relation);
-	            }
-	        }
-	        return relationsToReturn;
-	    }
+    @Override
+    public Collection<SystemRelation> getAllSystemRelations(SystemsManager systemsManager) {
+        Set<SystemRelation> relationsToReturn = new HashSet<>();
+        for (SystemUnderTest systemUnderTest : systemsManager.getAllSystemsUnderTest()) {
+            SystemRelation relation = findRelation(systemUnderTest);
+            if (relation != null && !relationsToReturn.contains(relation)) {
+                relationsToReturn.add(relation);
+            }
+        }
+        return relationsToReturn;
+    }
 
-	    private SystemRelation findRelation(SystemUnderTest system) {
-	        for (SystemRelation relation : relations) {
-	            if (relation.getSource().equals(system) || relation.getTarget().equals(system)) {
-	                return relation;
-	            }
-	        }
-	        return null;
-	    }
+    private SystemRelation findRelation(SystemUnderTest system) {
+        for (SystemRelation relation : relations) {
+            if (relation.getSource().equals(system) || relation.getTarget().equals(system)) {
+                return relation;
+            }
+        }
+        return null;
+    }
 
 }

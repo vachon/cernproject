@@ -1,6 +1,6 @@
 package filters;
 
-import application.DataLayer;
+import application.DataLayerImpl;
 import application.Main;
 import javafx.scene.control.ComboBox;
 
@@ -13,7 +13,7 @@ public class FilterTypeView implements FilterView {
 		
 		cbType = (ComboBox) Main.scene.lookup("#cbType");
 		cbType.getItems().add("-");
-		cbType.getItems().addAll(DataLayer.getInstance().getSystemsManager().getAllSystemTypes());
+		cbType.getItems().addAll(DataLayerImpl.getInstance().getSystemsManager().getAllSystemTypes());
 		cbType.getSelectionModel().selectFirst();
 	}
 

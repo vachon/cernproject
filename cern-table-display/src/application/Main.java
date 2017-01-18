@@ -32,18 +32,17 @@ public class Main extends Application {
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
-			RandomGenSystems test = new RandomGenSystems();
-			TableView tab = (TableView)scene.lookup("#tab");
+			TableView<TableItem> tab = (TableView<TableItem>)scene.lookup("#tab");
 			
 			TableController controller = new TableController(tab);
-			controller.initialize(DataLayer.getInstance().getData());
+			controller.initialize(DataLayerImpl.getInstance().getData());
 			
 			Button btnLaunchFilters = (Button)scene.lookup("#btnLaunchFilters");
 			btnLaunchFilters.setOnAction(new EventHandler<ActionEvent>(){
 				public void handle(ActionEvent event) {
 					tab.getItems().clear();
 					try {
-						tab.setItems(DataLayer.getInstance().getData());
+						tab.setItems(DataLayerImpl.getInstance().getData());
 					} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException
 							| SecurityException e) {
 						e.printStackTrace();
