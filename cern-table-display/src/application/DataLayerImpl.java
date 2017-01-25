@@ -113,7 +113,7 @@ public class DataLayerImpl extends AbstractDataLayer{
 		int index = 0;
 		for(SystemUnderTest item : listUnderTest)
 		{
-			String props[] = {Integer.toString(index),item.getName(),item.getKey().toDbString(),relationController.getRelatedSystems(item).toString()};
+			String props[] = {Integer.toString(index),item.getName(),item.getKey().toDbString(),relationController.getSystemRelations(item,SystemRelation.class).toString()};
 			index++;
 			try {
 				data.add(new TableItem(props));

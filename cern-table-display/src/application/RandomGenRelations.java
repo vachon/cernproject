@@ -19,7 +19,7 @@ public class RandomGenRelations implements SystemRelationProvider{
         Random random = new Random();
         relations = new HashSet<>();
         Collection<SystemUnderTest> systems = systemManager.getAllSystemsUnderTest();
-        for (int i=0; i<50; i++) {
+        for (int i=0; i<1; i++) {
         	int id1 = 0;
         	int id2 = 0;
         	id1 = random.nextInt(systemManager.getAllSystemsUnderTest().size());
@@ -27,8 +27,9 @@ public class RandomGenRelations implements SystemRelationProvider{
         	while(id2 == id1)
         		id2 = random.nextInt(systemManager.getAllSystemsUnderTest().size());
         	
-        	SystemRelation newRel = SystemRelations.unspecifiedFromTo((SystemUnderTest)systems.toArray()[id1],(SystemUnderTest)systems.toArray()[id2]);
+        	SystemRelation newRel = new BasicSystemRelation((SystemUnderTest)systems.toArray()[id1],(SystemUnderTest)systems.toArray()[id2]);
         	relations.add((SystemRelation)newRel);
+        	System.out.println(relations);
         }
     }
 		
